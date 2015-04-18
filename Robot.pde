@@ -10,7 +10,9 @@ class Robot extends Actor{
 
   public void act(){
     checkTargeted();
-    movement();
+    if(move){
+      movement();
+    }
   }
 
   public void movement(){
@@ -63,6 +65,10 @@ class Robot extends Actor{
     }
   }
 
+  /*
+   * Maybe use bits array directly? Hmmmm.
+   */
+
   public boolean[] getBits(){
     boolean[] bits = new boolean[totalBits];
     for(int i = 0; i < bits.length; i++){
@@ -71,6 +77,11 @@ class Robot extends Actor{
     bits[0] = turnDirection;
     bits[1] = move;
     return bits;
+  }
+
+  public void setBits(boolean[] bits){
+    turnDirection = bits[0];
+    move = bits[1];
   }
 
   public boolean[] getBitsAvailable(){

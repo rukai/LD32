@@ -1,8 +1,10 @@
 class HUD{
   private Robot target;
-  private PGraphics graphic;
   private boolean[] bits = {};
   private boolean[] bitsAvailable = {};
+  private boolean pressable = true;
+
+  private PGraphics graphic;
   private PImage bitSpritesheet;
   private PImage HUDSpritesheet;
 
@@ -18,13 +20,16 @@ class HUD{
   public PImage getGraphic(){
     return graphic.get();
   }
-
+  
+  /*
+   * Draw the HUD including bit buttons and fancy details of robot
+   */
   private void drawHud(){
     graphic.beginDraw();
     if(target != null){
-      graphic.background(255);
+      graphic.background(0);
       graphic.image(HUDSpritesheet, 0, 0);
-      graphic.fill(0);
+      graphic.fill(255);
       graphic.text(target.getX(), 300, 30);
       graphic.text(target.getY(), 300, 47);
 
@@ -49,17 +54,61 @@ class HUD{
     graphic.endDraw();
   }
 
+  /*
+   * Update the hud
+   */
   public void act(){
+    if(target != null){
+      checkButtons();
+
+      modifyTarget();
+    }
+
     drawHud();
   }
 
+  /*
+   * Set the robot that the HUD will focus on
+   */
   public void setTarget(Robot target){
     this.target = target;
     analyseTarget();
   }
-
+  
+  /*
+   * Get information on the robot
+   */
   private void analyseTarget(){
     bits = target.getBits();
     bitsAvailable = target.getBitsAvailable();
+  }
+  
+  /*
+   * Set modifications on the robot
+   */
+  private void modifyTarget(){
+    target.setBits(bits);
+  }
+
+  /*
+   * Check if the buttons on the HUD have been pressed
+   */
+  private void checkButtons(){
+    int relMouseX = mouseX;
+    int relMouseY = mouseY - (height - HUDSpritesheet.height);
+    
+    boolean xCollision = relMouseX > 0 && relMouseX < bitsAvailable.length * 32;
+    boolean yCollision = relMouseY > 0 && relMouseY < HUDSpritesheet.height;
+    if(mousePressed){
+      if(xCollision && yCollision && pressable){
+        int bitIndex = relMouseX / 32;
+        print(bitIndex);
+        bits[bitIndex] = !bits[bitIndex];
+      }
+      pressable = false;
+    }
+    else{
+      pressable = true;
+    }
   }
 }
