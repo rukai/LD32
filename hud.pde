@@ -96,13 +96,12 @@ class HUD{
   private void checkButtons(){
     int relMouseX = mouseX;
     int relMouseY = mouseY - (height - HUDSpritesheet.height);
-    
     boolean xCollision = relMouseX > 0 && relMouseX < bitsAvailable.length * 32;
     boolean yCollision = relMouseY > 0 && relMouseY < HUDSpritesheet.height;
+
     if(mousePressed){
       if(xCollision && yCollision && pressable){
         int bitIndex = relMouseX / 32;
-        print(bitIndex);
         bits[bitIndex] = !bits[bitIndex];
       }
       pressable = false;

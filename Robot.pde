@@ -6,12 +6,20 @@ class Robot extends Actor{
   int stepsBeforeTurnCount = 0;
   int gridCount = 0;
   boolean[] accessibleBits = {};
+  List<Actor> actors;
   HUD hud;
 
   public void act(){
     checkTargeted();
     if(move){
       movement();
+    }
+    checkDeath();
+  }
+  
+  private void checkDeath(){
+    if(collision(Lava.class) != null){
+      actors.remove(this);
     }
   }
 
@@ -88,13 +96,14 @@ class Robot extends Actor{
     return accessibleBits;
   }
   
-  public Robot(int x, int y, HUD hud, String robotID){
+  public Robot(int x, int y, HUD hud, List<Actor> actors, String robotID){
     graphic = loadImage("robot.png");
     accessibleBits = new boolean[totalBits];
     for(int i = 0; i < accessibleBits.length; i++){
       accessibleBits[i] = true;
     }
     this.hud = hud;
+    this.actors = actors;
     this.x = x;
     this.y = y;
     this.w = 32;
@@ -111,6 +120,48 @@ class Robot extends Actor{
       this.turnDirection = false;
       this.direction = 1;
     }
+  }
+
+  /*
+   * Return any actors that collide with this actor
+   */
+  private Actor collision(Class cls){
+    for(Actor actor : actors){
+      if(collision(actor) && actor != this && actor.getClass() == cls){
+          return actor;
+      }
+    }
+    return null;
+  }
+
+  /*
+   * Check if collision occurs with the specified actor
+   */
+  private boolean collision(Actor actor){
+    boolean xCollision = !(x + w < actor.getX() || x > actor.getX() + actor.getW());
+    boolean yCollision = !(y + h < actor.getY() || y > actor.getY() + actor.getH());
+    return xCollision && yCollision;
+  }
+
+  /*
+   * Return an actor at the passed location
+   */
+  private Actor actorAtLocation(int x, int y){
+    for(Actor actor : actors){
+      if(actorAtLocation(actor, x, y)){
+          return actor;
+      }
+    }
+    return null;
+  }
+
+  /*
+   * Check if an actor is at the passed location
+   */
+  private boolean actorAtLocation(Actor actor, int x, int y){
+    boolean xCollision = x > actor.getX() && x < actor.getX() + actor.getW();
+    boolean yCollision = y > actor.getY() && y < actor.getY() + actor.getH();
+    return xCollision && yCollision;
   }
 }
 

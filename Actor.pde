@@ -1,4 +1,4 @@
-class Actor{
+abstract class Actor{
   protected int x;
   protected int y;
   protected int w;
@@ -16,7 +16,16 @@ class Actor{
     return y;
   }
 
+  public int getW(){
+    return w;
+  }
+
+  public int getH(){
+    return h;
+  }
+
   public PImage getGraphic(){
     return graphic.get();
   }
+
 }
