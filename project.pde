@@ -48,7 +48,7 @@ void draw(){
   }
 
   //draws
-  background(0);
+  background(80, 235, 90);
   for(Actor actor : actors){
     image(actor.getGraphic(), actor.getX(), actor.getY());
   }

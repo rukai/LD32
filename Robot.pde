@@ -1,9 +1,11 @@
 class Robot extends Actor{
   boolean turnDirection = true;
+  boolean move = true;
   int direction = 0;
   int stepsBeforeTurn = 0;
   int stepsBeforeTurnCount = 0;
   int gridCount = 0;
+  boolean[] accessibleBits = {};
   HUD hud;
 
   public void act(){
@@ -28,7 +30,7 @@ class Robot extends Actor{
     }
     
     //disable controls while moving between grids
-    if(gridCount == 32){
+    if(gridCount == 31){
       //manage turning
       stepsBeforeTurnCount++;
       if(stepsBeforeTurnCount == stepsBeforeTurn){
@@ -60,9 +62,27 @@ class Robot extends Actor{
       hud.setTarget(this);
     }
   }
+
+  public boolean[] getBits(){
+    boolean[] bits = new boolean[totalBits];
+    for(int i = 0; i < bits.length; i++){
+      bits[i] = true;
+    }
+    bits[0] = turnDirection;
+    bits[1] = move;
+    return bits;
+  }
+
+  public boolean[] getBitsAvailable(){
+    return accessibleBits;
+  }
   
   public Robot(int x, int y, HUD hud, String robotID){
     graphic = loadImage("robot.png");
+    accessibleBits = new boolean[totalBits];
+    for(int i = 0; i < accessibleBits.length; i++){
+      accessibleBits[i] = true;
+    }
     this.hud = hud;
     this.x = x;
     this.y = y;
@@ -76,9 +96,11 @@ class Robot extends Actor{
       this.direction = 2;
     }
     if(robotID.equals("01")){
-      this.stepsBeforeTurn = 2;
+      this.stepsBeforeTurn = 1;
       this.turnDirection = false;
       this.direction = 1;
     }
   }
 }
+
+final int totalBits = 4;
