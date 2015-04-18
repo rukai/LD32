@@ -29,9 +29,11 @@ class HUD{
     if(target != null){
       graphic.background(0);
       graphic.image(HUDSpritesheet, 0, 0);
-      graphic.fill(255);
-      graphic.text(target.getX(), 300, 30);
-      graphic.text(target.getY(), 300, 47);
+      graphic.fill(0);
+      graphic.text(target.getX(), 300, 20);
+      graphic.text(target.getY(), 300, 35);
+      String statusMessage = "Status: " + (target.isAlive() ? "Operational" : "Failed");
+      graphic.text(statusMessage , 300, 50);
 
       for(int i = 0; i < bits.length; i++){
         if(bitsAvailable[i]){

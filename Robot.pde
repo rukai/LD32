@@ -1,6 +1,7 @@
 class Robot extends Actor{
   boolean turnDirection = true;
   boolean move = true;
+  boolean alive = true;
   int direction = 0;
   int stepsBeforeTurn = 0;
   int stepsBeforeTurnCount = 0;
@@ -19,6 +20,7 @@ class Robot extends Actor{
   
   private void checkDeath(){
     if(collision(Lava.class) != null){
+      alive = false;
       actors.remove(this);
     }
   }
@@ -46,15 +48,15 @@ class Robot extends Actor{
       if(stepsBeforeTurnCount == stepsBeforeTurn){
         stepsBeforeTurnCount = 0;
         if(turnDirection){
-          direction++;
-          if(direction > 3){
-            direction = 0;
-          }
-        }
-        else{
           direction--;
           if(direction < 0){
             direction = 3;
+          }
+        }
+        else{
+          direction++;
+          if(direction > 3){
+            direction = 0;
           }
         }
       }
@@ -163,6 +165,11 @@ class Robot extends Actor{
     boolean yCollision = y > actor.getY() && y < actor.getY() + actor.getH();
     return xCollision && yCollision;
   }
+
+  public boolean isAlive(){
+    return alive;
+  }
 }
+
 
 final int totalBits = 4;
