@@ -6,16 +6,46 @@ class Robot extends Actor{
   int stepsBeforeTurn = 0;
   int stepsBeforeTurnCount = 0;
   int gridCount = 0;
+
+  //value of -1 means do not draw, 
+  //0 < value < drawLaserMax means draw and increment
+  //value > drawLaserMax means set to -1
+  int drawLaser = -1; 
+  final int drawLaserMax = 7;
+
   boolean[] accessibleBits = {};
   List<Actor> actors;
   HUD hud;
 
+  /*
+   * Manage robot
+   */
   public void act(){
     checkTargeted();
     if(move){
       movement();
     }
     checkDeath();
+    laser();
+  }
+
+  /*
+   * Manage laser
+   */
+  public void laser(){
+    if(drawLaser > -1){
+      drawLaser++;
+      if(drawLaser > drawLaserMax){
+        drawLaser = -1;
+      }
+    }
+  }
+
+  /*
+   * Should a laser be drawn, fired at the robot
+   */
+  public boolean drawLaser(){
+    return drawLaser > -1;
   }
   
   private void checkDeath(){
@@ -25,6 +55,9 @@ class Robot extends Actor{
     }
   }
 
+  /*
+   * Controls motion according to set bits
+   */
   public void movement(){
     switch(direction){
       case 0:
@@ -67,6 +100,9 @@ class Robot extends Actor{
     }
   }
 
+  /*
+   * If the robot is clicked on set as a target of the HUD
+   */
   public void checkTargeted(){
     boolean xCollision = mouseX > x && mouseX < x + w;
     boolean yCollision = mouseY > y && mouseY < y + h;
@@ -92,6 +128,7 @@ class Robot extends Actor{
   public void setBits(boolean[] bits){
     turnDirection = bits[0];
     move = bits[1];
+    drawLaser = 0;
   }
 
   public boolean[] getBitsAvailable(){

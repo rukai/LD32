@@ -32,7 +32,7 @@ class HUD{
       graphic.fill(0);
       graphic.text(target.getX(), 300, 20);
       graphic.text(target.getY(), 300, 35);
-      String statusMessage = "Status: " + (target.isAlive() ? "Operational" : "Failed");
+      String statusMessage = "Status: " + (target.isAlive() ? "Operational" : "Eliminated");
       graphic.text(statusMessage , 300, 50);
 
       for(int i = 0; i < bits.length; i++){
@@ -62,8 +62,6 @@ class HUD{
   public void act(){
     if(target != null){
       checkButtons();
-
-      modifyTarget();
     }
 
     drawHud();
@@ -105,6 +103,7 @@ class HUD{
       if(xCollision && yCollision && pressable){
         int bitIndex = relMouseX / 32;
         bits[bitIndex] = !bits[bitIndex];
+        modifyTarget();
       }
       pressable = false;
     }
