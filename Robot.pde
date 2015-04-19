@@ -3,6 +3,7 @@ class Robot extends Actor{
   boolean move = true;
   boolean alive = true;
   int direction = 0;
+  int speed = 2; //needs to be a multiple of 32 at the moment.
   int stepsBeforeTurn = 0;
   int stepsBeforeTurnCount = 0;
   int gridCount = 0;
@@ -61,21 +62,21 @@ class Robot extends Actor{
   public void movement(){
     switch(direction){
       case 0:
-        x++;
+        x += speed;
         break;
       case 1:
-        y--;
+        y -= speed;
         break;
       case 2:
-        x--;
+        x -= speed;
         break;
       case 3:
-        y++;
+        y += speed;
         break;
     }
     
     //disable controls while moving between grids
-    if(gridCount == 31){
+    if(gridCount > 31){
       //manage turning
       stepsBeforeTurnCount++;
       if(stepsBeforeTurnCount == stepsBeforeTurn){
@@ -96,7 +97,7 @@ class Robot extends Actor{
       gridCount = 0;
     }
     else{
-      gridCount++;
+      gridCount += speed;
     }
   }
 
