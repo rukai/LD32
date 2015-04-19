@@ -74,7 +74,7 @@ void draw(){
  * Dispay backstory and begin game on any button press
  */
 public void pregame(){
-  boolean mouseInScreen = mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height;
+  boolean mouseInScreen = mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height;
   if((keyPressed || mousePressed) && mouseInScreen){
     state = State.GAME;
   }
