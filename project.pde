@@ -15,7 +15,7 @@ void setup(){
   size(640, 640);
   minim = new Minim(this);
   backgroundMusic = minim.loadFile("music/eMinor.wav");
-  //backgroundMusic.loop();
+  backgroundMusic.loop();
   moonGraphic = loadImage("graphics/moon.png");
   hud = new HUD();
 
@@ -26,6 +26,7 @@ void setup(){
  * Creates a list of actors as specified by the levels array
  */
 void setupLevel(){
+  hud.setTarget(null);
   actors = new ArrayList<Actor>();
   for(int y = 0; y < levels[currentLevel].length; y++){
     for(int x = 0; x < levels[currentLevel][y].length; x++){
@@ -79,8 +80,9 @@ public void pregame(){
   if((keyPressed || mousePressed) && mouseInScreen){
     state = State.GAME;
   }
-  background(0);
+  background(#081820);
   textAlign(CENTER);
+  fill(#e0f8d0);
   String introduction = "After a fierce battle, rogue robots have taken over earth.";
     introduction += "\nWe, the survivors, have established a temporary colony on the moon.";
     introduction += "\nOur only weapon, is an extremely accurate & long range electromagnetic radiation emitter.";
@@ -97,8 +99,9 @@ public void pregame(){
  * Show end screen
  */
 public void gameover(){
-  background(0);
+  background(#081820);
   textAlign(CENTER);
+  fill(#e0f8d0);
   text("The End.\nAll the robots have been destroyed.\nThe Earth is slowly rebuilt...", width/2, height/2);
 }
 
@@ -115,19 +118,22 @@ public void game(){
   }
 
   //draws
-  background(80, 235, 90);
+  //background(#b4db89);
+  background(#e0f8d0);
   for(Actor actor : actors){
     image(actor.getGraphic(), actor.getX(), actor.getY());
 
     //draw laser
     if(actor.getClass() == Robot.class && ((Robot) actor).drawLaser()){
       //outer
-      stroke(250, 20, 20);
+      //stroke(250, 20, 20);
+      stroke(#306850);
       line(actor.getX()+actor.getW()/2-1, actor.getY()+actor.getH()/2, width-1, 0);
       line(actor.getX()+actor.getW()/2+1, actor.getY()+actor.getH()/2, width+1, 0);
 
       //inner highlight
-      stroke(180, 40, 40);
+      //stroke(180, 40, 40);
+      stroke(#88c070);
       line(actor.getX()+actor.getW()/2, actor.getY()+actor.getH()/2, width, 0);
     }
   }
