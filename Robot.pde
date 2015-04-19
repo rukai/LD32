@@ -1,4 +1,5 @@
 class Robot extends Actor{
+  AudioPlayer deathSFX;
   boolean turnDirection = true;
   boolean move = true;
   boolean blocked = false;
@@ -55,6 +56,8 @@ class Robot extends Actor{
   
   private void checkDeath(){
     if(collision(Lava.class) != null){
+      deathSFX.setGain(-10);
+      deathSFX.play();
       alive = false;
       actors.remove(this);
     }
@@ -64,23 +67,6 @@ class Robot extends Actor{
    * Controls motion according to set bits
    */
   public void movement(){
-    //if(!blocked){
-    //  switch(direction){
-    //    case 0:
-    //      x += speed;
-    //      break;
-    //    case 1:
-    //      y -= speed;
-    //      break;
-    //    case 2:
-    //      x -= speed;
-    //      break;
-    //    case 3:
-    //      y += speed;
-    //      break;
-    //  }
-    //}
-  
 
     //manage a single step accross 32 pixels
     if(gridCount >= 32){
@@ -128,56 +114,55 @@ class Robot extends Actor{
       oneStep = true;
       stepDirection = direction;
     }
-
-    
-    ////disable controls while moving between grids
-    //if(gridCount > 31){
-    //  //manage turning
-    //  blocked = isBlocked();
-    //  stepsBeforeTurnCount++;
-    //  if(stepsBeforeTurnCount == stepsBeforeTurn){
-    //    stepsBeforeTurnCount = 0;
-    //    if(turnDirection){
-    //      direction--;
-    //      if(direction < 0){
-    //        direction = 3;
-    //      }
-    //    }
-    //    else{
-    //      direction++;
-    //      if(direction > 3){
-    //        direction = 0;
-    //      }
-    //    }
-    //  }
-    //  gridCount = 0;
-    //}
-    //else{
-    //  gridCount += speed;
-    //}
-    ////alow movement out of blocked state
-    //if(blocked){
-    //  blocked = isBlocked();
-    //}
   }
 
   /*
    * Returns true if the robot is blocked by impassible objects
    */
   public boolean isBlocked(){
+    //right
     if(direction == 0 && actorAtLocation(getX()+48, getY()+16, Obstacle.class) != null){
       return true;
     }
+    //up
     else if(direction == 1 && actorAtLocation(getX()+16, getY()-16, Obstacle.class) != null){
       return true;
     }
+    //left
     else if(direction == 2 && actorAtLocation(getX()-16, getY()+16, Obstacle.class) != null){
       return true;
     }
+    //down
     else if(direction == 3 && actorAtLocation(getX()+16, getY()+48, Obstacle.class) != null){
       return true;
     }
     else{
+      println(x);
+      return false;
+    }
+  }
+  /*
+   * Returns true if the robot is blocked by impassible objects
+   */
+  public boolean isBlockedWhacko(){
+    //right
+    if(direction == 0 && actorAtLocation(getX()+48, getY()+16, Obstacle.class) != null || x > width){
+      return true;
+    }
+    //up
+    else if(direction == 1 && actorAtLocation(getX()+16, getY()-16, Obstacle.class) != null || y < 0){
+      return true;
+    }
+    //left
+    else if(direction == 2 && actorAtLocation(getX()-16, getY()+16, Obstacle.class) != null || x < 32){
+      return true;
+    }
+    //down
+    else if(direction == 3 && actorAtLocation(getX()+16, getY()+48, Obstacle.class) != null || y + 96 > height){
+      return true;
+    }
+    else{
+      println(x);
       return false;
     }
   }
@@ -225,6 +210,7 @@ class Robot extends Actor{
   
   public Robot(int x, int y, HUD hud, List<Actor> actors, String robotID){
     graphic = loadImage("graphics/robot.png");
+    deathSFX = minim.loadFile("sfx/death.wav");
     //accessibleBits = new boolean[totalBits];
     //for(int i = 0; i < accessibleBits.length; i++){
     //  accessibleBits[i] = true;
