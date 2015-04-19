@@ -30,23 +30,25 @@ class HUD{
    */
   private void drawHud(){
     graphic.beginDraw();
-    if(target != null){
-      graphic.background(0);
-      graphic.image(HUDSpritesheet, 0, 0);
-      graphic.fill(0);
-      graphic.text(target.getX(), 300, 20);
-      graphic.text(target.getY(), 300, 35);
-      String statusMessage;
-      if(target.isAlive()){
-        graphic.fill(0, 255, 0);
-        statusMessage = "Status: Operational";
+    graphic.background(0);
+    graphic.image(HUDSpritesheet, 0, 0);
+    drawBits();
+    drawRobotStatus();
+    drawLevelMessage();
+    graphic.endDraw();
+  }
+  
+  /*
+   * Draw the modifiable robot bits
+   */
+  public void drawBits(){
+    //bits
+    if(target == null){
+      for(int i = 0; i < 4; i++){
+        graphic.image(shutterSpritesheet, i * 32, 0);
       }
-      else{
-        graphic.fill(255, 0, 0);
-        statusMessage = "Status: Eliminated";
-      }
-      graphic.text(statusMessage , 300, 50);
-
+    }
+    else{
       for(int i = 0; i < bits.length; i++){
         if(bitsAvailable[i]){
           //set spritesheet offset
@@ -62,10 +64,42 @@ class HUD{
         }
       }
     }
-    else{
-      graphic.background(0);
+  }
+
+  /*
+   * Draw ricey robot status
+   */
+  public void drawRobotStatus(){
+    int statusX = 150;
+    graphic.fill(0);
+    if(target == null){
+      graphic.text("Robot Status:", statusX, 20);
+      graphic.text("N\\A", statusX, 35);
     }
-    graphic.endDraw();
+    else{
+      graphic.text("Robot Status:", statusX, 20);
+      graphic.text("Coords: " + target.getX() + ", " + target.getY(), statusX, 35);
+      String statusMessage;
+      if(target.isAlive()){
+        graphic.fill(#177b0d);
+        statusMessage = "Operational";
+      }
+      else{
+        graphic.fill(235, 10, 10);
+        statusMessage = "Eliminated";
+      }
+      graphic.text("State: " + statusMessage , statusX, 50);
+    }
+  }
+
+  /*
+   * Draws a unique message for each level
+   */
+  public void drawLevelMessage(){
+    int messageX = 300;
+    graphic.fill(0);
+    String message = levelMessage[currentLevel];
+    graphic.text(levelMessage[currentLevel], messageX, 25);
   }
 
   /*
@@ -84,9 +118,11 @@ class HUD{
    */
   public void setTarget(Robot target){
     this.target = target;
-    analyseTarget();
-    setTargetSFX.rewind();
-    setTargetSFX.play();
+    if(target != null){
+      analyseTarget();
+      setTargetSFX.rewind();
+      setTargetSFX.play();
+    }
   }
   
   /*
