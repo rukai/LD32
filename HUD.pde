@@ -3,6 +3,7 @@ class HUD{
   private boolean[] bits = {};
   private boolean[] bitsAvailable = {};
   private boolean pressable = true;
+  private boolean keyPressable = true;
 
   private PGraphics graphic;
   private PImage bitSpritesheet;
@@ -143,12 +144,14 @@ class HUD{
   /*
    * Check if the buttons on the HUD have been pressed
    */
+  final String inputs = "qwer";
   private void checkButtons(){
     int relMouseX = mouseX;
     int relMouseY = mouseY - (height - HUDSpritesheet.height);
     boolean xCollision = relMouseX > 0 && relMouseX < bitsAvailable.length * 32;
     boolean yCollision = relMouseY > 0 && relMouseY < HUDSpritesheet.height;
-
+  
+    //mouse controls
     if(mousePressed){
       if(xCollision && yCollision && pressable){
         int bitIndex = relMouseX / 32;
@@ -159,6 +162,32 @@ class HUD{
     }
     else{
       pressable = true;
+    }
+    
+    //qwer controls
+    if(keyPressed){
+      if((key == 'q' || key == 'w' || key == 'e' || key == 'r') && keyPressable){
+        int bitIndex = 0;
+        if(key == 'q'){
+          bitIndex = 0;
+        }
+        else if(key == 'w'){
+          bitIndex = 1;
+        }
+        else if(key == 'e'){
+          bitIndex = 2;
+        }
+        else if(key == 'r'){
+          bitIndex = 3;
+        }
+        bits[bitIndex] = !bits[bitIndex];
+        modifyTarget();
+      }
+
+      keyPressable = false;
+    }
+    else{
+      keyPressable = true;
     }
   }
 }

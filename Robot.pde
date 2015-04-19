@@ -137,7 +137,6 @@ class Robot extends Actor{
       return true;
     }
     else{
-      println(x);
       return false;
     }
   }
@@ -162,7 +161,6 @@ class Robot extends Actor{
       return true;
     }
     else{
-      println(x);
       return false;
     }
   }
