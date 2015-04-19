@@ -14,9 +14,9 @@ State state = State.PREGAME;
 void setup(){
   size(640, 640);
   minim = new Minim(this);
-  backgroundMusic = minim.loadFile("eMinor.wav");
+  backgroundMusic = minim.loadFile("music/eMinor.wav");
   backgroundMusic.loop();
-  moonGraphic = loadImage("moon.png");
+  moonGraphic = loadImage("graphics/moon.png");
   hud = new HUD();
 
   setupLevel();
@@ -26,6 +26,7 @@ void setup(){
  * Creates a list of actors as specified by the levels array
  */
 void setupLevel(){
+  actors = new ArrayList<Actor>();
   for(int y = 0; y < levels[currentLevel].length; y++){
     for(int x = 0; x < levels[currentLevel][y].length; x++){
       String objectID = levels[currentLevel][y][x];
@@ -146,6 +147,9 @@ public void game(){
     currentLevel++;
     if(currentLevel == levels.length){
       state = State.GAMEOVER;
+    }
+    else{
+      setupLevel();
     }
   }
 }

@@ -1,6 +1,6 @@
 class Obstacle extends Actor{
   public Obstacle(int x, int y){
-    graphic = loadImage("obstacle.png");
+    graphic = loadImage("graphics/obstacle.png");
     this.x = x;
     this.y = y;
   }

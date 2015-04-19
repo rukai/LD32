@@ -7,10 +7,12 @@ class HUD{
   private PGraphics graphic;
   private PImage bitSpritesheet;
   private PImage HUDSpritesheet;
+  private PImage shutterSpritesheet;
 
   public HUD(){
-    bitSpritesheet = loadImage("bit.png");
-    HUDSpritesheet = loadImage("HUD.png");
+    bitSpritesheet = loadImage("graphics/bit.png");
+    HUDSpritesheet = loadImage("graphics/HUD.png");
+    shutterSpritesheet = loadImage("graphics/shutter.png");
     graphic = createGraphics(width, 64);
     graphic.beginDraw();
     graphic.background(255);
@@ -32,7 +34,15 @@ class HUD{
       graphic.fill(0);
       graphic.text(target.getX(), 300, 20);
       graphic.text(target.getY(), 300, 35);
-      String statusMessage = "Status: " + (target.isAlive() ? "Operational" : "Eliminated");
+      String statusMessage;
+      if(target.isAlive()){
+        stroke(0, 255, 0);
+        statusMessage = "Status: Operational";
+      }
+      else{
+        stroke(255, 0, 0);
+        statusMessage = "Status: Eliminated";
+      }
       graphic.text(statusMessage , 300, 50);
 
       for(int i = 0; i < bits.length; i++){
@@ -46,7 +56,7 @@ class HUD{
           graphic.image(bitSpritesheet.get(xOffset, 0, xOffset+13, 26), 10+i*32, 36);
         }
         else{
-          //shutter
+          graphic.image(shutterSpritesheet, i*32, 0);
         }
       }
     }

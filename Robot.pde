@@ -14,7 +14,7 @@ class Robot extends Actor{
   int drawLaser = -1; 
   final int drawLaserMax = 7;
 
-  boolean[] accessibleBits = {};
+  //boolean[] availableBits = {};
   List<Actor> actors;
   HUD hud;
 
@@ -133,15 +133,15 @@ class Robot extends Actor{
   }
 
   public boolean[] getBitsAvailable(){
-    return accessibleBits;
+    return availableBitsPerLevel[currentLevel];
   }
   
   public Robot(int x, int y, HUD hud, List<Actor> actors, String robotID){
-    graphic = loadImage("robot.png");
-    accessibleBits = new boolean[totalBits];
-    for(int i = 0; i < accessibleBits.length; i++){
-      accessibleBits[i] = true;
-    }
+    graphic = loadImage("graphics/robot.png");
+    //accessibleBits = new boolean[totalBits];
+    //for(int i = 0; i < accessibleBits.length; i++){
+    //  accessibleBits[i] = true;
+    //}
     this.hud = hud;
     this.actors = actors;
     this.x = x;
@@ -150,15 +150,20 @@ class Robot extends Actor{
     this.h = 32;
 
     //also check level mebe?
-    if(robotID.equals("00")){
+    if(robotID == "00"){
       this.stepsBeforeTurn = 4;
       this.turnDirection = true;
       this.direction = 2;
     }
-    if(robotID.equals("01")){
+    if(robotID == "01"){
       this.stepsBeforeTurn = 1;
       this.turnDirection = false;
       this.direction = 1;
+    }
+    if(robotID == "02"){
+      this.stepsBeforeTurn = -1;
+      this.direction = 0;
+      this.move = false;
     }
   }
 
