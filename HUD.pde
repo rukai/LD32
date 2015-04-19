@@ -8,8 +8,10 @@ class HUD{
   private PImage bitSpritesheet;
   private PImage HUDSpritesheet;
   private PImage shutterSpritesheet;
+  private AudioPlayer setTargetSFX;
 
   public HUD(){
+    setTargetSFX = minim.loadFile("sfx/setTarget.wav");
     bitSpritesheet = loadImage("graphics/bit.png");
     HUDSpritesheet = loadImage("graphics/HUD.png");
     shutterSpritesheet = loadImage("graphics/shutter.png");
@@ -36,11 +38,11 @@ class HUD{
       graphic.text(target.getY(), 300, 35);
       String statusMessage;
       if(target.isAlive()){
-        stroke(0, 255, 0);
+        graphic.fill(0, 255, 0);
         statusMessage = "Status: Operational";
       }
       else{
-        stroke(255, 0, 0);
+        graphic.fill(255, 0, 0);
         statusMessage = "Status: Eliminated";
       }
       graphic.text(statusMessage , 300, 50);
@@ -83,6 +85,8 @@ class HUD{
   public void setTarget(Robot target){
     this.target = target;
     analyseTarget();
+    setTargetSFX.rewind();
+    setTargetSFX.play();
   }
   
   /*

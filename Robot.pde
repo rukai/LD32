@@ -1,8 +1,12 @@
 class Robot extends Actor{
   boolean turnDirection = true;
   boolean move = true;
+  boolean blocked = false;
+  boolean oneStep = false; //take one 32 pixel step
   boolean alive = true;
+  boolean pressable = true;
   int direction = 0;
+  int stepDirection = 0;
   int speed = 2; //needs to be a multiple of 32 at the moment.
   int stepsBeforeTurn = 0;
   int stepsBeforeTurnCount = 0;
@@ -60,44 +64,121 @@ class Robot extends Actor{
    * Controls motion according to set bits
    */
   public void movement(){
-    switch(direction){
-      case 0:
-        x += speed;
-        break;
-      case 1:
-        y -= speed;
-        break;
-      case 2:
-        x -= speed;
-        break;
-      case 3:
-        y += speed;
-        break;
+    //if(!blocked){
+    //  switch(direction){
+    //    case 0:
+    //      x += speed;
+    //      break;
+    //    case 1:
+    //      y -= speed;
+    //      break;
+    //    case 2:
+    //      x -= speed;
+    //      break;
+    //    case 3:
+    //      y += speed;
+    //      break;
+    //  }
+    //}
+  
+
+    //manage a single step accross 32 pixels
+    if(gridCount >= 32){
+      gridCount = 0;
+      oneStep = false;
     }
-    
-    //disable controls while moving between grids
-    if(gridCount > 31){
-      //manage turning
-      stepsBeforeTurnCount++;
-      if(stepsBeforeTurnCount == stepsBeforeTurn){
-        stepsBeforeTurnCount = 0;
-        if(turnDirection){
-          direction--;
-          if(direction < 0){
-            direction = 3;
-          }
-        }
-        else{
-          direction++;
-          if(direction > 3){
-            direction = 0;
-          }
+    if(oneStep){
+      gridCount += speed;
+      switch(stepDirection){
+        case 0:
+          x += speed;
+          break;
+        case 1:
+          y -= speed;
+          break;
+        case 2:
+          x -= speed;
+          break;
+        case 3:
+          y += speed;
+          break;
+      }
+    }
+
+    //manage the routine change of direction;
+    if(stepsBeforeTurnCount == stepsBeforeTurn * 32/speed){
+      stepsBeforeTurnCount = 0;
+      if(turnDirection){
+        direction--;
+        if(direction < 0){
+          direction = 3;
         }
       }
-      gridCount = 0;
+      else{
+        direction++;
+        if(direction > 3){
+          direction = 0;
+        }
+      }
+    }
+    stepsBeforeTurnCount++;
+
+    //start a step when clear
+    if(!isBlocked()){
+      oneStep = true;
+      stepDirection = direction;
+    }
+
+    
+    ////disable controls while moving between grids
+    //if(gridCount > 31){
+    //  //manage turning
+    //  blocked = isBlocked();
+    //  stepsBeforeTurnCount++;
+    //  if(stepsBeforeTurnCount == stepsBeforeTurn){
+    //    stepsBeforeTurnCount = 0;
+    //    if(turnDirection){
+    //      direction--;
+    //      if(direction < 0){
+    //        direction = 3;
+    //      }
+    //    }
+    //    else{
+    //      direction++;
+    //      if(direction > 3){
+    //        direction = 0;
+    //      }
+    //    }
+    //  }
+    //  gridCount = 0;
+    //}
+    //else{
+    //  gridCount += speed;
+    //}
+    ////alow movement out of blocked state
+    //if(blocked){
+    //  blocked = isBlocked();
+    //}
+  }
+
+  /*
+   * Returns true if the robot is blocked by impassible objects
+   */
+  public boolean isBlocked(){
+    if(direction == 0 && actorAtLocation(getX()+48, getY()+16, Obstacle.class) != null){
+      return true;
+    }
+    else if(direction == 1 && actorAtLocation(getX()+16, getY()-16, Obstacle.class) != null){
+      return true;
+    }
+    else if(direction == 2 && actorAtLocation(getX()-16, getY()+16, Obstacle.class) != null){
+      return true;
+    }
+    else if(direction == 3 && actorAtLocation(getX()+16, getY()+48, Obstacle.class) != null){
+      return true;
     }
     else{
-      gridCount += speed;
+      return false;
     }
   }
 
@@ -107,8 +188,14 @@ class Robot extends Actor{
   public void checkTargeted(){
     boolean xCollision = mouseX > x && mouseX < x + w;
     boolean yCollision = mouseY > y && mouseY < y + h;
-    if(xCollision && yCollision && mousePressed){
-      hud.setTarget(this);
+    if(mousePressed){
+      if(xCollision && yCollision && pressable){
+        hud.setTarget(this);
+      }
+      pressable = false;
+    }
+    else{
+      pressable = true;
     }
   }
 
@@ -191,10 +278,10 @@ class Robot extends Actor{
   /*
    * Return an actor at the passed location
    */
-  private Actor actorAtLocation(int x, int y){
+  private Actor actorAtLocation(int x, int y, Class cls){
     for(Actor actor : actors){
-      if(actorAtLocation(actor, x, y)){
-          return actor;
+      if(actorAtLocation(actor, x, y) && actor != this && actor.getClass() == cls){
+        return actor;
       }
     }
     return null;
@@ -204,8 +291,9 @@ class Robot extends Actor{
    * Check if an actor is at the passed location
    */
   private boolean actorAtLocation(Actor actor, int x, int y){
-    boolean xCollision = x > actor.getX() && x < actor.getX() + actor.getW();
-    boolean yCollision = y > actor.getY() && y < actor.getY() + actor.getH();
+    boolean xCollision = x >= actor.getX() && x <= actor.getX() + actor.getW();
+    boolean yCollision = y >= actor.getY() && y <= actor.getY() + actor.getH();
+    //println(y + ":" + actor.getY()+"-" + (actor.getY() + actor.getH()));
     return xCollision && yCollision;
   }
 
@@ -213,6 +301,5 @@ class Robot extends Actor{
     return alive;
   }
 }
-
 
 final int totalBits = 4;

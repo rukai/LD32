@@ -3,5 +3,7 @@ class Obstacle extends Actor{
     graphic = loadImage("graphics/obstacle.png");
     this.x = x;
     this.y = y;
+    this.w = 32;
+    this.h = 32;
   }
 }

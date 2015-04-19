@@ -15,7 +15,7 @@ void setup(){
   size(640, 640);
   minim = new Minim(this);
   backgroundMusic = minim.loadFile("music/eMinor.wav");
-  backgroundMusic.loop();
+  //backgroundMusic.loop();
   moonGraphic = loadImage("graphics/moon.png");
   hud = new HUD();
 
