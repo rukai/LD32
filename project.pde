@@ -55,7 +55,7 @@ boolean checkRobotID(String string){
   }
  return true;
 }
-String digits = "1234567890";
+final String digits = "1234567890";
 
 /*
  * Runs the draw method for the current state
