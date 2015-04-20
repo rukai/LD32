@@ -1,5 +1,6 @@
 class Robot extends Actor{
   AudioPlayer deathSFX;
+  AudioPlayer setBitSFX;
   boolean turnDirection = true;
   boolean move = true;
   boolean blocked = false;
@@ -197,6 +198,9 @@ class Robot extends Actor{
   }
 
   public void setBits(boolean[] bits){
+    setBitSFX.setGain(-10);
+    setBitSFX.rewind();
+    setBitSFX.play();
     turnDirection = bits[0];
     move = bits[1];
     drawLaser = 0;
@@ -209,6 +213,7 @@ class Robot extends Actor{
   public Robot(int x, int y, HUD hud, List<Actor> actors, String robotID){
     graphic = loadImage("graphics/robot.png");
     deathSFX = minim.loadFile("sfx/death.wav");
+    setBitSFX = minim.loadFile("sfx/setBit.wav");
     //accessibleBits = new boolean[totalBits];
     //for(int i = 0; i < accessibleBits.length; i++){
     //  accessibleBits[i] = true;
